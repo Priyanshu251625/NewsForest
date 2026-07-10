@@ -133,11 +133,23 @@ https://mediastack.com/
 
 ### Home Page
 
-*(Add screenshot here after deployment)*
+<p align="center">
+  <img src="screenshots/home.png" width="900" alt="Home Page">
+</p>
+
+<p align="center">
+  <img src="screenshots/home.png" width="900" alt="home">
+</p>
 
 ### Category Page
 
-*(Add screenshot here after deployment)*
+<p align="center">
+  <img src="screenshots/home.png" width="900" alt="Home Page">
+</p>
+
+<p align="center">
+  <img src="screenshots/tech.png" width="900" alt="Technology Category">
+</p>
 
 ---
 
