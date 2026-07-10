@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NewsForest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
+  <style>
+    .description {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition duration-300">
+
+  <!-- Navbar -->
+  <nav class="bg-gray-100 dark:bg-gray-800 px-6 py-4 flex justify-between items-center shadow-md">
+    <div class="text-xl font-bold text-green-600 dark:text-green-400">NewsForest</div>
+    <div class="hidden md:flex gap-6 text-sm font-medium">
+      <a href="/category/general" class="hover:underline">General</a>
+      <a href="/category/science" class="hover:underline">Science</a>
+      <a href="/category/technology" class="hover:underline">Technology</a>
+      <!-- Wrapper -->
+      <div class="relative">
+        <!-- Toggle Button -->
+        <button id="moreToggle" class="flex items-center gap-1 hover:underline focus:outline-none">
+          More
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mt-0.5" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown -->
+        <div id="moreMenu" class="hidden absolute bg-white dark:bg-gray-700 mt-2 rounded shadow-md w-40 z-50">
+          <a href="/category/entertainment"
+            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Entertainment</a>
+          <a href="/category/business" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Business</a>
+          <a href="/category/health" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Health</a>
+          <a href="/category/sports" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Sports</a>
+        </div>
+      </div>
+
+    </div>
+    <button id="toggleTheme" class="ml-4 border px-3 py-1 rounded text-sm">Toggle Theme</button>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 mt-10">
+    <% if(locals.data){ %>
+      <!-- Featured Article as a Card -->
+      <a href="<%=data[0].url %>" class="group bg-gray-100 dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden grid
+        grid-cols-1 lg:grid-cols-2 gap-0" target="_blank" rel="noopener noreferrer">
+        <!-- Text Content -->
+        <div class="p-8 flex flex-col justify-center hover:bg-gray-200 dark:hover:bg-gray-700">
+          <!-- title -->
+          <h3 href="#" class="text-4xl font-bold mb-4 leading-tight group-hover:underline">
+            <%= data[0].title %>
+          </h3>
+          <!-- description -->
+          <% const cleanedDescription=data[0].description.replace(/&nbsp;/g, ' ' ); %>
+            <p class=" text-gray-600 dark:text-gray-300 mb-4 ">
+              <%= cleanedDescription %>
+            </p>
+            <% const date=new Date(data[0].published_at); const options={ year: 'numeric' , month: 'long' ,
+              day: 'numeric' }; const formattedDate=date.toLocaleDateString('en-US', options); %>
+              <div class="text-sm text-gray-500 dark:text-gray-400">
+                <%= data[0].category %> <!--category--> · <%= data[0].source %> <!--source--> · <%= formattedDate %>
+                      <!--date-->
+              </div>
+        </div>
+        <!-- Image -->
+        <% var b=Math.floor(Math.random() * 4) + 1; var img=cat+b;%>
+        <img
+          src="<%= data[0].image || `/images/${img}.jpg` %>"
+          class="w-full h-full object-cover" loading="lazy"
+          onerror="this.onerror=null;this.src='/images/Image_not_available.png';">
+      </a>
+      <% data.shift() %>
+        <!-- News Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Card Example -->
+          <% data.forEach(news=>{ %>
+            <a href="<%=news.url %>"
+              class="group p-4 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700
+              transition" target="_blank" rel="noopener noreferrer">
+              <% var b=Math.floor(Math.random() * 4) + 1; var img=cat+b;%>
+                <img
+                  src="<%=news.image %>"
+                  class="rounded mb-3" loading="lazy" onerror="this.onerror=null;this.src='/images/<%= img %>.jpg';">
+                <h3 class="text-lg font-semibold group-hover:underline">
+                  <!-- title -->
+                  <%= news.title %>
+                </h3>
+                <% const cleanedDescription=news.description.replace(/&nbsp;/g, ' ' ); %>
+                  <p class="description text-gray-600 dark:text-gray-300 mb-4">
+                    <!-- description -->
+                    <%= cleanedDescription %>
+                  </p>
+                  <% const date=new Date(news.published_at); const options={ year: 'numeric' , month: 'long' ,
+                    day: 'numeric' }; const formattedDate=date.toLocaleDateString('en-US', options); %>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      <%= news.category %> <!--category-->· <%= news.source %> <!--source--> · <%= formattedDate %>
+                            <!--date-->
+                    </p>
+            </a>
+            <% }); %>
+        </div>
+        <% } %>
+          <% if(locals.error){ %>
+            <div id="tag-error" class="tag-error">
+              <!-- Show any errors that were sent from the backend -->
+              <p>
+                <%= error %>
+              </p>
+            </div>
+            <%}%>
+              <!-- Footer or Load More -->
+              <div class="text-right">
+                <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">See all →</a>
+              </div>
+  </div>
+
+  <!-- Dark Mode Toggle Script -->
+  <script>
+    const toggleTheme = document.getElementById('toggleTheme');
+    toggleTheme.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+    const toggleBtn = document.getElementById('moreToggle');
+    const dropdown = document.getElementById('moreMenu');
+
+    // Toggle visibility
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent click from bubbling
+      dropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown if clicking outside
+    document.addEventListener('click', (e) => {
+      if (!dropdown.classList.contains('hidden')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Prevent closing when clicking inside the dropdown
+    dropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  </script>
+</body>
+
+</html>
