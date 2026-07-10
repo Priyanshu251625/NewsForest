@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 app.set("view engine","ejs")
 app.use(express.static("public"));
-const URL='http://api.mediastack.com/v1/news'
+const URL='https://api.mediastack.com/v1/news'
 app.get('/', async (req, res) => {
   try {
     const response = await axios.get(URL, {
